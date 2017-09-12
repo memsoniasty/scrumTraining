@@ -6,32 +6,31 @@
 
 package command.library;
 
+import command.framework.Command;
 import interfaces.IDrive;
 import interfaces.IOutputter;
-import command.framework.Command;
-import filesystem.Directory;
-import filesystem.FileSystemItem;
 
-/**Command to change current directory.
+/**
+ * Command to change current directory.
  * Example for a command with optional parameters.
  */
 class CmdExit extends Command {
 
-    protected CmdExit(String name, IDrive drive) {
-        super(name, drive);
-    }
+	protected CmdExit(String name, IDrive drive) {
+		super(name, drive);
+	}
 
-    @Override
-    public boolean checkNumberOfParameters(int numberOfParametersEntered) {
-        return (numberOfParametersEntered == 0 || numberOfParametersEntered == 1);
-    }
+	@Override
+	public boolean checkNumberOfParameters(int numberOfParametersEntered) {
+		return numberOfParametersEntered == 0;
+	}
 
-    @Override
-    public boolean checkParameterValues(IOutputter outputter) {
-        return true;
-    }
+	@Override
+	public boolean checkParameterValues(IOutputter outputter) {
+		return true;
+	}
 
-    @Override
-    public void execute(IOutputter outputter) {
-    }
+	@Override
+	public void execute(IOutputter outputter) {
+	}
 }
