@@ -34,9 +34,8 @@ class CmdMkFile extends Command {
 				newFile = new File(fileName, fileContent);
 				break;
 			default:
-				return;
+				throw new IllegalArgumentException("syntax of the command is incorrect");
 		}
-
 
 		this.getDrive().getCurrentDirectory().add(newFile);
 	}
