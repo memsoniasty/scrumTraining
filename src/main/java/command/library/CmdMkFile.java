@@ -2,7 +2,7 @@
  * DOSBox, Scrum.org, Professional Scrum Developer Training
  * Authors: Rainer Grau, Daniel Tobler, Zuehlke Technology Group
  * Copyright (c) 2013 All Right Reserved
- */ 
+ */
 
 package command.library;
 
@@ -19,9 +19,25 @@ class CmdMkFile extends Command {
 
 	@Override
 	public void execute(IOutputter outputter) {
-		String fileName = this.getParameterAt(0);
-		String fileContent = this.getParameterAt(1);
-		File newFile = new File(fileName, fileContent);
+		String fileName;
+		String fileContent;
+		File newFile;
+
+		switch (this.getParameterCount()) {
+			case 1:
+				fileName = this.getParameterAt(0);
+				newFile = new File(fileName, "");
+				break;
+			case 2:
+				fileName = this.getParameterAt(0);
+				fileContent = this.getParameterAt(1);
+				newFile = new File(fileName, fileContent);
+				break;
+			default:
+				return;
+		}
+
+
 		this.getDrive().getCurrentDirectory().add(newFile);
 	}
 }
