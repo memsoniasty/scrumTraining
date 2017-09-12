@@ -33,7 +33,7 @@ public class Drive implements IDrive {
 		//TODO: How to convert parameter from char to String?
 		this.driveLetter = driveLetter.substring(0, 1);
 		this.driveLetter = this.driveLetter.toUpperCase();
-		this.label = new String("");
+		this.label = new String("Hello World");
 		this.rootDir = new Directory(this.driveLetter + ":");
 		this.currentDir = this.rootDir;
 	}
