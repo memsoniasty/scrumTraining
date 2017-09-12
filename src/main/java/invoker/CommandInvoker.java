@@ -74,8 +74,6 @@ public class CommandInvoker implements IExecuteCommand {
 			}
 			outputter.printLine("\'" + cmdName + "\' is not recognized as an internal or external command,");
 			outputter.printLine("operable program or batch file.");
-		} catch (IllegalArgumentException e) {
-			outputter.printLine(e.getMessage());
 		} catch (Exception e) {
 			if (e.getMessage() != null) {
 				outputter.printLine("Unexpected exception while execution command: " + e.getMessage());

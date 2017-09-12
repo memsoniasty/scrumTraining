@@ -18,6 +18,11 @@ class CmdMkFile extends Command {
 	}
 
 	@Override
+	protected boolean checkNumberOfParameters(int numberOfParametersEntered) {
+		return numberOfParametersEntered > 0 && numberOfParametersEntered <= 2;
+	}
+
+	@Override
 	public void execute(IOutputter outputter) {
 		String fileName;
 		String fileContent;
@@ -34,7 +39,7 @@ class CmdMkFile extends Command {
 				newFile = new File(fileName, fileContent);
 				break;
 			default:
-				throw new IllegalArgumentException("syntax of the command is incorrect");
+				return;
 		}
 
 		this.getDrive().getCurrentDirectory().add(newFile);
