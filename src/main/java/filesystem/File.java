@@ -2,18 +2,18 @@
  * DOSBox, Scrum.org, Professional Scrum Developer Training
  * Authors: Rainer Grau, Daniel Tobler, Zuehlke Technology Group
  * Copyright (c) 2013 All Right Reserved
- */ 
+ */
 
 package filesystem;
 
 import java.util.ArrayList;
 
-/**This class implements the behavior of concrete files. 
+/**This class implements the behavior of concrete files.
  * Composite-Pattern: Leaf
- * 
+ *
  * Responsibilities:
- * - represents leaf objects in the composition. A leaf has no children. 
- * - defines behavior for primitive objects in the composition. 
+ * - represents leaf objects in the composition. A leaf has no children.
+ * - defines behavior for primitive objects in the composition.
  */
 public class File extends FileSystemItem {
 	private String fileContent;
