@@ -29,6 +29,7 @@ public class CmdVerTest extends CmdTest {
 	@Test
 	public void cmdVer_WithParameter () {
 		executeCommand("ver /w");
+		TestHelper.assertContains("Microsoft Windows [Version", testOutput.toString());
 		TestHelper.assertContains("Dominik Schmitz", testOutput.toString());
 	}
 

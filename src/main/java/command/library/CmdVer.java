@@ -29,9 +29,8 @@ public class CmdVer extends Command {
 
 	@Override
 	public void execute(IOutputter outputter) {
-		if (this.getParameterCount() == 0) {
-			outputter.printLine("Microsoft Windows [Version 6.1.7601]");
-		} else if (this.getParameterCount() == 1) {
+		outputter.printLine("Microsoft Windows [Version 6.1.7601]");
+		if (this.getParameterCount() == 1) {
 			outputter.printLine("Lars Frauenrath");
 			outputter.printLine("Willi Man");
 			outputter.printLine("Przemyslaw Galera");
