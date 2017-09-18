@@ -68,7 +68,11 @@ public class CommandInvoker implements IExecuteCommand {
 						outputter.printLine("Wrong parameter entered");
 						return;
 					}
-					cmd.execute(outputter);
+					try {
+						cmd.execute(outputter);
+					} finally {
+						cmd.trace();
+					}
 					return;
 				}
 			}

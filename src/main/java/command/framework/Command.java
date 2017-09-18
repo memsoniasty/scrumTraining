@@ -10,11 +10,20 @@ import interfaces.IDrive;
 import interfaces.IOutputter;
 
 import java.util.ArrayList;
+import java.util.logging.FileHandler;
+import java.io.IOException;
+import java.util.logging.SimpleFormatter;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 
 /**Implements the abstract base class for commands.
   */
 public abstract class Command {
+	final static Logger logger = Logger.getLogger("Command");
+
     private static final String INCORRECT_SYNTAX = "The syntax of the command is incorrect.";
     private static final String DEFAULT_ERROR_MESSAGE_WRONG_PARAMETER = "Wrong parameter entered";
 	private String commandName;
@@ -87,6 +96,23 @@ public abstract class Command {
 	 * @param outputter Must be used to output any text.
 	 */
 	public abstract void execute(IOutputter outputter);
+
+	/**Prints the command execution details to the common logfile
+	 */
+	public void trace(){
+		FileHandler fileHandler = null;
+		try {
+			fileHandler = new FileHandler("DosBox.log");
+		} catch (IOException  e){
+			e.printStackTrace();
+		}
+		fileHandler.setFormatter(new SimpleFormatter());
+		logger.addHandler(fileHandler);
+		logger.setUseParentHandlers(false);
+		logger.setLevel(Level.FINEST);
+		logger.info(
+				"Executed command: " + this.commandName + " with params: " + this.parameters.toString());
+	}
 
     /**Returns true if the passed name and the command name fit.
      * Used to obtain the concrete command from the list of commands.
