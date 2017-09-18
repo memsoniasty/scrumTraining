@@ -4,6 +4,8 @@ import command.framework.Command;
 import interfaces.IDrive;
 import interfaces.IOutputter;
 
+import java.util.Comparator;
+
 /**
  * @author dominik.schmitz@traveltainment.de
  */
@@ -27,6 +29,7 @@ public class CmdHelp extends Command {
     public void execute(IOutputter outputter) {
         new CommandFactory(getDrive()).getCommandList().stream()
                 .filter(command -> command.getClass() != this.getClass())
+                .sorted(Comparator.comparing(Command::toString))
                 .forEach(filteredCommand -> outputter.printLine(filteredCommand.toString()));
     }
 }
