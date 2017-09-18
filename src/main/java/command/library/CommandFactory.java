@@ -2,7 +2,7 @@
  * DOSBox, Scrum.org, Professional Scrum Developer Training
  * Authors: Rainer Grau, Daniel Tobler, Zuehlke Technology Group
  * Copyright (c) 2013 All Right Reserved
- */ 
+ */
 
 package command.library;
 
@@ -16,12 +16,12 @@ import java.util.ArrayList;
  * New commands must be added to the list of known commands here.
  */
 public class CommandFactory {
-	
+
 	private ArrayList<Command> commands;
 
 	public CommandFactory(IDrive drive) {
 		this.commands = new ArrayList<Command>();
-		
+
 		this.commands.add(new CmdDir("dir", drive));
 		this.commands.add(new CmdCd("cd", drive));
 		this.commands.add(new CmdCd("chdir", drive));
@@ -34,9 +34,10 @@ public class CommandFactory {
 		this.commands.add(new CmdVer("ver", drive));
         this.commands.add(new CmdVol("vol", drive));
 		this.commands.add(new CmdType("type", drive));
+		this.commands.add(new CmdHelp("help", drive));
 
 	}
-	
+
 	public ArrayList<Command> getCommandList() {
 		return commands;
 	}
