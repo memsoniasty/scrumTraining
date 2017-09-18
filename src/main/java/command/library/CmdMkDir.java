@@ -2,14 +2,14 @@
  * DOSBox, Scrum.org, Professional Scrum Developer Training
  * Authors: Rainer Grau, Daniel Tobler, Zuehlke Technology Group
  * Copyright (c) 2013 All Right Reserved
- */ 
+ */
 
 package command.library;
 
-import interfaces.IDrive;
-import interfaces.IOutputter;
 import command.framework.Command;
 import filesystem.Directory;
+import interfaces.IDrive;
+import interfaces.IOutputter;
 
 class CmdMkDir extends Command {
     private static final String PARAMETER_CONTAINS_BACKLASH = "At least one parameter denotes a path rather than a directory name.";
@@ -26,10 +26,13 @@ class CmdMkDir extends Command {
 
     @Override
     protected boolean checkParameterValues(IOutputter outputter) {
-        for(int i=0 ; i<getParameterCount() ; i++)
-        {
-            if (parameterContainsBacklashes(getParameterAt(i), outputter))
+        for (int i = 0; i < getParameterCount(); i++) {
+            if (parameterContainsBacklashes(getParameterAt(i), outputter)) {
                 return false;
+            }
+            if (fileOrDirectoryExists(getParameterAt(i), outputter)) {
+                return false;
+            }
         }
 
         return true;
@@ -37,8 +40,7 @@ class CmdMkDir extends Command {
 
     private static boolean parameterContainsBacklashes(String parameter, IOutputter outputter) {
         // Do not allow "mkdir c:\temp\dir1" to keep the command simple
-        if (parameter.contains("\\") || parameter.contains("/"))
-        {
+        if (parameter.contains("\\") || parameter.contains("/")) {
             outputter.printLine(PARAMETER_CONTAINS_BACKLASH);
             return true;
         }
@@ -47,8 +49,7 @@ class CmdMkDir extends Command {
 
     @Override
     public void execute(IOutputter outputter) {
-        for(int i=0 ; i<getParameterCount() ; i++)
-        {
+        for (int i = 0; i < getParameterCount(); i++) {
             CreateDirectory(getParameterAt(i), this.getDrive());
         }
     }

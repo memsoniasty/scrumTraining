@@ -6,11 +6,13 @@
 
 package command.library;
 
-import static org.junit.Assert.*;
+import filesystem.File;
+import helpers.TestHelper;
 import org.junit.Before;
 import org.junit.Test;
-import helpers.TestHelper;
-import filesystem.File;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class CmdMkFileTest extends CmdTest {
 
@@ -77,5 +79,41 @@ public class CmdMkFileTest extends CmdTest {
         executeCommand("mkfile");
         assertEquals(numbersOfFilesBeforeTest, drive.getCurrentDirectory().getNumberOfContainedFiles());
         TestHelper.assertContains("syntax of the command is incorrect", testOutput.toString());
+    }
+
+    @Test
+    public void CmdMkFile_Duplicate_File()
+    {
+        executeCommand("mkfile gugus");
+        assertEquals(numbersOfFilesBeforeTest + 1, drive.getCurrentDirectory().getNumberOfContainedFiles());
+        TestHelper.assertOutputIsEmpty(testOutput);
+        executeCommand("mkfile gugus");
+        assertEquals(numbersOfFilesBeforeTest + 1, drive.getCurrentDirectory().getNumberOfContainedFiles());
+        TestHelper.assertContains("A subdirectory or file 'gugus' already exists", testOutput.toString());
+    }
+
+
+    @Test
+    public void CmdMkFile_Duplicate_File_Case()
+    {
+        executeCommand("mkfile gugus");
+        assertEquals(numbersOfFilesBeforeTest + 1, drive.getCurrentDirectory().getNumberOfContainedFiles());
+        TestHelper.assertOutputIsEmpty(testOutput);
+        executeCommand("mkfile Gugus");
+        assertEquals(numbersOfFilesBeforeTest + 1, drive.getCurrentDirectory().getNumberOfContainedFiles());
+        TestHelper.assertContains("A subdirectory or file 'Gugus' already exists", testOutput.toString());
+    }
+
+    @Test
+    public void CmdMkFile_Duplicate_File_Directory()
+    {
+        this.commandInvoker.addCommand(new CmdMkDir("mkdir", this.drive));
+
+        executeCommand("mkfile gugus");
+        assertEquals(numbersOfFilesBeforeTest + 1, drive.getCurrentDirectory().getNumberOfContainedFiles());
+        TestHelper.assertOutputIsEmpty(testOutput);
+        executeCommand("mkdir gugus");
+        assertEquals(numbersOfFilesBeforeTest + 1, drive.getCurrentDirectory().getNumberOfContainedFiles());
+        TestHelper.assertContains("A subdirectory or file 'gugus' already exists", testOutput.toString());
     }
 }

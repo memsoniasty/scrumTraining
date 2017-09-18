@@ -2,92 +2,115 @@
  * DOSBox, Scrum.org, Professional Scrum Developer Training
  * Authors: Rainer Grau, Daniel Tobler, Zuehlke Technology Group
  * Copyright (c) 2013 All Right Reserved
- */ 
+ */
 
 package command.library;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+import filesystem.Directory;
 import helpers.Path;
 import helpers.TestHelper;
-
 import org.junit.Before;
 import org.junit.Test;
 
-import filesystem.Directory;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 public class CmdMkDirTest extends CmdTest {
 
-	@Before
-	public void setUp() {
+    @Before
+    public void setUp() {
         // Check this file structure in base class: crucial to understand the tests.
         this.createTestFileStructure();
 
-		// Add all commands which are necessary to execute this unit test
-		// Important: Other commands are not available unless added here.
-		this.commandInvoker.addCommand(new CmdMkDir("mkdir", this.drive));
-	}
+        // Add all commands which are necessary to execute this unit test
+        // Important: Other commands are not available unless added here.
+        this.commandInvoker.addCommand(new CmdMkDir("mkdir", this.drive));
+    }
 
     @Test
-    public void CmdMkDir_CreateNewDirectory_NewDirectoryIsAdded()
-    {
+    public void CmdMkDir_CreateNewDirectory_NewDirectoryIsAdded() {
         final String testDirName = "test1";
         executeCommand("mkdir " + testDirName);
         Directory testDirectory = TestHelper.getDirectory(drive, Path.Combine(drive.getDriveLetter(), testDirName),
-                                                          testDirName);
+                testDirName);
         assertSame(drive.getRootDirectory(), testDirectory.getParent());
         assertEquals(numbersOfDirectoriesBeforeTest + 1, drive.getRootDirectory().getNumberOfContainedDirectories());
         TestHelper.assertOutputIsEmpty(testOutput);
     }
 
     @Test
-    public void CmdMkDir_CreateNewDirectory_NewDirectoryIsAddedToCorrectLocation()
-    {
+    public void CmdMkDir_CreateNewDirectory_NewDirectoryIsAddedToCorrectLocation() {
         final String testDirName = "test1";
         executeCommand("mkdir " + testDirName);
         Directory testDirectory = TestHelper.getDirectory(drive, Path.Combine(drive.getDriveLetter(), testDirName),
-                                                          testDirName);
+                testDirName);
         assertSame(drive.getRootDirectory(), testDirectory.getParent());
     }
 
     @Test
-    public void CmdMkDir_SingleLetterDirectory_NewDirectoryIsAdded()
-    {
+    public void CmdMkDir_SingleLetterDirectory_NewDirectoryIsAdded() {
         final String testDirName = "a";
         executeCommand("mkdir " + testDirName);
         Directory testDirectory = TestHelper.getDirectory(drive, Path.Combine(drive.getDriveLetter(), testDirName),
-                                                          testDirName);
+                testDirName);
         assertSame(drive.getRootDirectory(), testDirectory.getParent());
         assertEquals(numbersOfDirectoriesBeforeTest + 1, drive.getRootDirectory().getNumberOfContainedDirectories());
         TestHelper.assertOutputIsEmpty(testOutput);
     }
 
     @Test
-    public void CmdMkDir_NoParameters_ErrorMessagePrinted()
-    {
+    public void CmdMkDir_NoParameters_ErrorMessagePrinted() {
         executeCommand("mkdir");
         assertEquals(numbersOfDirectoriesBeforeTest, drive.getRootDirectory().getNumberOfContainedDirectories());
         TestHelper.assertContains("syntax of the command is incorrect", testOutput);
     }
 
     @Test
-    public void CmdMkDir_ParameterContainsBacklash_ErrorMessagePrinted()
+    public void CmdMkDir_Duplicate_Directory() {
+        executeCommand("mkdir gaga");
+        assertEquals(numbersOfDirectoriesBeforeTest + 1, drive.getRootDirectory().getNumberOfContainedDirectories());
+        executeCommand("mkdir gaga");
+        assertEquals(numbersOfDirectoriesBeforeTest + 1, drive.getRootDirectory().getNumberOfContainedDirectories());
+        TestHelper.assertContains("A subdirectory or file 'gaga' already exists", testOutput);
+    }
+
+    @Test
+    public void CmdMkDir_Duplicate_Directory_Case() {
+        executeCommand("mkdir gaga");
+        assertEquals(numbersOfDirectoriesBeforeTest + 1, drive.getRootDirectory().getNumberOfContainedDirectories());
+        executeCommand("mkdir Gaga");
+        assertEquals(numbersOfDirectoriesBeforeTest + 1, drive.getRootDirectory().getNumberOfContainedDirectories());
+        TestHelper.assertContains("A subdirectory or file 'Gaga' already exists", testOutput);
+    }
+
+    @Test
+    public void CmdMkFile_Duplicate_Directory_File()
     {
+        this.commandInvoker.addCommand(new CmdMkFile("mkfile", this.drive));
+
+        executeCommand("mkdir gugus");
+        assertEquals(numbersOfFilesBeforeTest + 1, drive.getCurrentDirectory().getNumberOfContainedDirectories());
+        TestHelper.assertOutputIsEmpty(testOutput);
+        executeCommand("mkfile gugus");
+        assertEquals(numbersOfFilesBeforeTest + 1, drive.getCurrentDirectory().getNumberOfContainedDirectories());
+        TestHelper.assertContains("A subdirectory or file 'gugus' already exists", testOutput.toString());
+    }
+
+    @Test
+    public void CmdMkDir_ParameterContainsBacklash_ErrorMessagePrinted() {
         executeCommand("mkdir c:\\test1");
         TestHelper.assertContains("At least one parameter", this.testOutput);
         TestHelper.assertContains("path rather than a directory name", this.testOutput);
     }
 
     @Test
-    public void CmdMkDir_ParameterContainsBacklash_NoDirectoryCreated()
-    {
+    public void CmdMkDir_ParameterContainsBacklash_NoDirectoryCreated() {
         executeCommand("mkdir c:\\test1");
         assertEquals(numbersOfDirectoriesBeforeTest, drive.getRootDirectory().getNumberOfContainedDirectories());
     }
 
     @Test
-    public void CmdMkDir_SeveralParameters_SeveralNewDirectoriesCreated()
-    {
+    public void CmdMkDir_SeveralParameters_SeveralNewDirectoriesCreated() {
         // given
         final String testDirName1 = "test1";
         final String testDirName2 = "test2";
@@ -98,11 +121,11 @@ public class CmdMkDirTest extends CmdTest {
 
         // then
         Directory directory1 = TestHelper.getDirectory(drive, Path.Combine(drive.getDriveLetter(), testDirName1),
-                                                       testDirName1);
+                testDirName1);
         Directory directory2 = TestHelper.getDirectory(drive, Path.Combine(drive.getDriveLetter(), testDirName2),
-                                                       testDirName2);
+                testDirName2);
         Directory directory3 = TestHelper.getDirectory(drive, Path.Combine(drive.getDriveLetter(), testDirName3),
-                                                       testDirName3);
+                testDirName3);
         assertSame(directory1.getParent(), drive.getRootDirectory());
         assertSame(directory2.getParent(), drive.getRootDirectory());
         assertSame(directory3.getParent(), drive.getRootDirectory());
@@ -111,8 +134,7 @@ public class CmdMkDirTest extends CmdTest {
     }
 
     @Test
-    public void CmdMkDir_AllParametersAreReset()
-    {
+    public void CmdMkDir_AllParametersAreReset() {
         final String testDirName = "test1";
         executeCommand("mkdir " + testDirName);
         assertEquals(numbersOfDirectoriesBeforeTest + 1, drive.getRootDirectory().getNumberOfContainedDirectories());
